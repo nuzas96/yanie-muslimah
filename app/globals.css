@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -10,13 +10,13 @@
 
 html {
   scroll-behavior: smooth;
-  background: #131411;
+  background: #F1E8D8;
 }
 
 body {
   margin: 0;
-  background: #131411;
-  color: #e5e2dd;
+  background: #F1E8D8;
+  color: #201B18;
   font-family: var(--font-sans), Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
