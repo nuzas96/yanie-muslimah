@@ -51,3 +51,37 @@ img {
 .divide-y > :not(:last-child) {
   border-color: rgba(255, 255, 255, 0.18) !important;
 }
+
+/* Peach accent pass: replace the original orange only, without touching layout. */
+::selection {
+  background: #F2B8A2;
+  color: #4d2700;
+}
+
+[class~="text-[#ffb77b]"] {
+  color: #F2B8A2 !important;
+}
+
+[class~="bg-[#ffb77b]"] {
+  background-color: #F2B8A2 !important;
+}
+
+[class~="border-[#ffb77b]"] {
+  border-color: #F2B8A2 !important;
+}
+
+[class~="hover:text-[#ffb77b]"]:hover {
+  color: #F2B8A2 !important;
+}
+
+[class~="hover:bg-[#ffc69a]"]:hover {
+  background-color: #F6C9BB !important;
+}
+
+[class~="shadow-[0_12px_35px_rgba(255,183,123,0.15)]"] {
+  box-shadow: 0 12px 35px rgba(242, 184, 162, 0.15) !important;
+}
+
+[class~="shadow-[0_15px_45px_rgba(255,183,123,0.08)]"] {
+  box-shadow: 0 15px 45px rgba(242, 184, 162, 0.08) !important;
+}
