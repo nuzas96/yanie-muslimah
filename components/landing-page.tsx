@@ -1,293 +1,191 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
-import { useState } from "react";
 
-const wa = "https://wa.me/601160860986";
-
-const services = [
-  { name: "Urutan Buang Angin", price: "RM100", note: "Urutan tradisional" },
-  { name: "Urutan Terapi Saraf", price: "RM130", note: "Fokus urutan tradisional" },
-  { name: "Urutan Badan, Kepala & Muka", price: "RM150", note: "Sesi gabungan" },
-  { name: "Bertungku", price: "RM150", note: "Rawatan tradisional" },
-  { name: "Urutan Ikhtiar Hamil", price: "RM150", note: "Urut + bertungku" },
-  { name: "Totok Wajah", price: "RM70–RM100", note: "30–45 minit" },
-  { name: "Bekam Satu Badan", price: "RM100", note: "Cup tambahan RM10" },
-  { name: "Sengkak Rahim & Rawatan Tombong", price: "RM150", note: "Urut satu badan + bertungku" },
-  { name: "Mandi Aura Bunga / Limau", price: "RM100–RM150", note: "Mengikut pilihan rawatan" },
-];
+const WA = "https://wa.me/601160860986";
+const whatsapp = (message: string) => `${WA}?text=${encodeURIComponent(message)}`;
 
 const packages = [
   {
-    label: "Pakej Pantang A",
-    title: "Rawatan ibu asas",
-    items: ["Urutan bersalin", "Urut lancar susu", "Bertungku satu badan"],
-    prices: ["3 hari · RM360", "5 hari · RM600"],
+    title: "Pakej Pantang A",
+    description: "Urutan bersalin, urut lancar susu dan bertungku satu badan.",
+    meta: "3 hari",
+    price: "RM360",
+    extra: "5 hari · RM600",
     message: "Assalamualaikum Kak Yanie, saya berminat dengan Pakej Pantang A.",
   },
   {
-    label: "Pakej Pantang B",
-    title: "Rawatan ibu + herba",
-    items: ["Urut bersalin", "Urut lancar susu", "Bertungku satu badan", "Mandi herba", "Pemakaian parem & pilis"],
-    prices: ["3 hari · RM420", "5 hari · RM700"],
+    title: "Pakej Pantang B",
+    description: "Urut bersalin, urut lancar susu, bertungku, mandi herba, parem dan pilis.",
+    meta: "3 hari",
+    price: "RM420",
+    extra: "5 hari · RM700",
+    popular: true,
     message: "Assalamualaikum Kak Yanie, saya berminat dengan Pakej Pantang B.",
-    featured: true,
   },
   {
-    label: "Pakej Urut Sihat Wanita",
-    title: "Empat rawatan dalam satu sesi",
-    items: ["Urut satu badan", "Bertungku satu badan", "Urut perkemas / sengkak rahim", "Urutan seri wajah"],
-    prices: ["Pakej · RM180"],
+    title: "Urut Sihat Wanita",
+    description: "Urut satu badan, bertungku, urut perkemas / sengkak rahim dan urutan seri wajah.",
+    meta: "1 pakej",
+    price: "RM180",
+    extra: "4 rawatan dalam satu pakej",
     message: "Assalamualaikum Kak Yanie, saya berminat dengan Pakej Urut Sihat Wanita RM180.",
   },
 ];
 
-const specialties = [
-  ["Urutan tradisi", "Sentuhan tradisional untuk wanita"],
-  ["Bertungku", "Rawatan tradisional sebagai tambahan sesi"],
-  ["Pakej pantang", "Pilihan 3 hari atau 5 hari"],
-  ["Rawatan wajah", "Totok wajah 30–45 minit"],
-  ["Tempahan terus", "Terus berbincang dengan Kak Yanie"],
-  ["Sitiawan · Manjung", "Cas pengangkutan pantang ikut jarak"],
-];
-
-const gallery = [
-  ["https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=1200&q=88", "Urutan badan"],
-  ["https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1000&q=88", "Suasana rawatan"],
-  ["https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1000&q=88", "Persediaan rawatan"],
-  ["https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1000&q=88", "Sesi urutan"],
+const services = [
+  ["Urutan Buang Angin", "RM100"],
+  ["Urutan Terapi Saraf", "RM130"],
+  ["Urutan Badan, Kepala & Muka", "RM150"],
+  ["Bertungku", "RM150"],
+  ["Urutan Ikhtiar Hamil + Bertungku", "RM150"],
+  ["Totok Wajah (30–45 minit)", "RM70–RM100"],
+  ["Bekam Satu Badan", "RM100"],
+  ["Satu Cup Bekam", "RM10"],
+  ["Sengkak Rahim & Rawatan Tombong + Urut & Bertungku", "RM150"],
+  ["Mandi Aura Bunga / Limau", "RM100–RM150"],
 ] as const;
 
-const reveal = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+const gallery = {
+  hero: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1800&q=90",
+  big: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=1400&q=88",
+  small1: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=88",
+  small2: "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=900&q=88",
+  wide: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1400&q=88",
+  cta: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1800&q=88",
 };
 
-function whatsapp(message: string) {
-  return `${wa}?text=${encodeURIComponent(message)}`;
-}
-
 export default function LandingPage() {
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className="outer-canvas">
-      <div className="site-shell">
-        <div className="edge-ornament edge-ornament-left" aria-hidden="true" />
-        <div className="edge-ornament edge-ornament-right" aria-hidden="true" />
+    <main className="sanctuary-page" id="top">
+      <nav className="topbar">
+        <a className="brand" href="#top">YanieMuslimah</a>
+        <div className="navlinks" aria-label="Navigasi utama">
+          <a href="#treatments">Rawatan</a>
+          <a href="#gallery">Galeri</a>
+          <a href="#testimonials">Feedback</a>
+          <a href="#pricing">Harga</a>
+        </div>
+        <a className="nav-book" href={whatsapp("Assalamualaikum Kak Yanie, saya nak tanya slot rawatan.")} target="_blank" rel="noreferrer">Tempah Sekarang</a>
+      </nav>
 
-        <header className="site-header">
-          <nav className="desktop-nav nav-left" aria-label="Navigasi utama">
-            <a href="#tentang">Tentang</a>
-            <a href="#servis">Servis</a>
-            <a href="#pakej">Pakej</a>
-          </nav>
+      <section className="hero">
+        <Image src={gallery.hero} alt="Suasana rawatan urutan tradisional" fill priority sizes="100vw" />
+        <div className="hero-overlay" />
+        <div className="hero-content">
+          <h1>Ketenangan Tradisional untuk<br />Wanita Moden</h1>
+          <p>Urutan tradisi bidan Melayu, bertungku dan penjagaan wanita dalam suasana yang lebih tenang dan peribadi.</p>
+          <a href={whatsapp("Assalamualaikum Kak Yanie, saya nak tanya slot rawatan.")} target="_blank" rel="noreferrer">Tempah Sekarang</a>
+        </div>
+      </section>
 
-          <a href="#top" className="wordmark" aria-label="Yanie Muslimah">
-            <strong>YANIE</strong>
-            <span>MUSLIMAH</span>
-          </a>
+      <section className="section treatments" id="treatments">
+        <div className="section-title centered">
+          <span>PERKHIDMATAN KAMI</span>
+          <h2>Pakej Rawatan</h2>
+        </div>
 
-          <div className="header-right">
-            <a className="desktop-price-link" href="#harga">Harga</a>
-            <a className="header-book" href={whatsapp("Assalamualaikum Kak Yanie, saya nak tanya slot rawatan.")} target="_blank" rel="noreferrer">
-              Tempah <span>↗</span>
-            </a>
-            <button className="menu-button" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-label="Buka menu">
-              <i /><i />
-            </button>
+        <div className="treatment-grid">
+          {packages.map((pkg) => (
+            <article className={`treatment-card ${pkg.popular ? "popular" : ""}`} key={pkg.title}>
+              {pkg.popular && <span className="popular-tag">POPULAR</span>}
+              <h3>{pkg.title}</h3>
+              <p>{pkg.description}</p>
+              <div className="card-price-row">
+                <span className="meta-dot">◉ {pkg.meta}</span>
+                <strong>{pkg.price}</strong>
+              </div>
+              <small>{pkg.extra}</small>
+              <a href={whatsapp(pkg.message)} target="_blank" rel="noreferrer">PILIH</a>
+            </article>
+          ))}
+        </div>
+
+        <details className="all-prices" id="pricing">
+          <summary>Lihat semua harga rawatan individu</summary>
+          <div className="all-prices-grid">
+            {services.map(([name, price]) => (
+              <div className="service-line" key={name}>
+                <span>{name}</span>
+                <strong>{price}</strong>
+              </div>
+            ))}
           </div>
+          <p className="price-note">* Pakej pantang mempunyai cas pengangkutan mengikut jarak. Servis berkaitan kesihatan ialah rawatan tradisional/wellness dan bukan pengganti diagnosis atau rawatan profesional kesihatan.</p>
+        </details>
+      </section>
 
-          {open && (
-            <motion.nav className="mobile-nav" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
-              {[["Tentang", "#tentang"], ["Servis", "#servis"], ["Harga", "#harga"], ["Pakej", "#pakej"], ["Feedback", "#feedback"]].map(([label, href]) => (
-                <a key={href} href={href} onClick={() => setOpen(false)}>{label}</a>
-              ))}
-            </motion.nav>
-          )}
-        </header>
+      <section className="section gallery-section" id="gallery">
+        <div className="section-title centered">
+          <span>GALERI</span>
+          <h2>Pengalaman Yanie Muslimah</h2>
+        </div>
 
-        <main id="top">
-          <section className="hero-grid">
-            <motion.div className="hero-copy" {...reveal}>
-              <p className="eyebrow">Tradisi bidan Melayu · khas wanita</p>
-              <h1>Rasa lebih <em>ringan</em> selepas beri tubuh masa untuk rehat.</h1>
-              <p className="hero-lead">Urutan tradisional, bertungku, rawatan wanita dan pakej pantang oleh Kak Yanie di Sitiawan, Manjung.</p>
-              <div className="hero-actions">
-                <a className="primary-cta" href={whatsapp("Assalamualaikum Kak Yanie, saya nak tanya slot rawatan.")} target="_blank" rel="noreferrer">WhatsApp Kak Yanie <span>↗</span></a>
-                <a className="quiet-link" href="#harga">Lihat harga <span>↓</span></a>
+        <div className="gallery-grid">
+          <figure className="g-big"><Image src={gallery.big} alt="Urutan tradisional" fill sizes="(max-width: 760px) 100vw, 66vw" /></figure>
+          <figure className="g-small"><Image src={gallery.small1} alt="Persediaan spa dan herba" fill sizes="(max-width: 760px) 50vw, 33vw" /></figure>
+          <figure className="g-small"><Image src={gallery.small2} alt="Ruang rawatan" fill sizes="(max-width: 760px) 50vw, 33vw" /></figure>
+          <figure className="g-wide"><Image src={gallery.wide} alt="Sesi urutan" fill sizes="100vw" /></figure>
+        </div>
+      </section>
+
+      <section className="section testimonial-section" id="testimonials">
+        <div className="section-title left-title">
+          <span>FEEDBACK</span>
+          <h2>Apa Kata Pelanggan Kami</h2>
+        </div>
+
+        <div className="testimonial-grid">
+          {[1, 2, 3].map((item) => (
+            <article className="testimonial-card" key={item}>
+              <div className="feedback-label">FEEDBACK SEBENAR</div>
+              <p>Screenshot feedback WhatsApp pelanggan akan diletakkan di ruang ini supaya testimoni yang dipaparkan benar-benar datang daripada pelanggan Yanie.</p>
+              <div className="testimonial-footer">
+                <strong>Feedback {String(item).padStart(2, "0")}</strong>
+                <small>AKAN DIKEMAS KINI</small>
               </div>
-            </motion.div>
+            </article>
+          ))}
+        </div>
+      </section>
 
-            <motion.div className="hero-image-block" {...reveal} transition={{ ...reveal.transition, delay: 0.08 }}>
-              <Image src={gallery[3][0]} alt={gallery[3][1]} fill priority sizes="(max-width: 760px) 100vw, 44vw" />
-              <a href="#pakej" className="floating-seal">
-                <small>PAKEJ PANTANG</small>
-                <strong>dari RM360</strong>
-                <span>lihat pakej ↘</span>
-              </a>
-            </motion.div>
+      <section className="booking-cta" id="booking">
+        <Image src={gallery.cta} alt="Suasana rawatan yang tenang" fill sizes="100vw" />
+        <div className="booking-overlay" />
+        <div className="booking-content">
+          <span>TEMPAH SEKARANG</span>
+          <h2>Mulakan Masa Rehat untuk Diri Sendiri</h2>
+          <p>Pilih rawatan atau pakej yang sesuai, kemudian terus WhatsApp Kak Yanie untuk semak slot di Sitiawan dan Manjung.</p>
+          <a href={whatsapp("Assalamualaikum Kak Yanie, saya nak tanya slot rawatan.")} target="_blank" rel="noreferrer">TEMPAH TEMUJANJI</a>
+        </div>
+      </section>
 
-            <motion.aside className="hero-side-note" {...reveal} transition={{ ...reveal.transition, delay: 0.16 }}>
-              <span className="display-quote">“</span>
-              <p>Rawatan wanita yang disusun dengan lebih personal — terus berhubung dengan Kak Yanie tanpa borang panjang.</p>
-              <div className="side-rule" />
-              <small>011-60860986<br />Sitiawan · Manjung</small>
-            </motion.aside>
+      <footer className="footer">
+        <div className="footer-main">
+          <div className="footer-brand">
+            <a href="#top">YanieMuslimah</a>
+            <p>Urutan tradisi bidan Melayu, rawatan wanita dan pakej pantang di Sitiawan, Manjung.</p>
+          </div>
+          <div className="footer-links">
+            <span>TEROKAI</span>
+            <a href="#treatments">Rawatan</a>
+            <a href="#gallery">Galeri</a>
+            <a href="#pricing">Harga</a>
+          </div>
+          <div className="footer-links">
+            <span>HUBUNGI</span>
+            <a href="tel:+601160860986">011-60860986</a>
+            <a href={WA} target="_blank" rel="noreferrer">WhatsApp</a>
+            <p>Sitiawan · Manjung</p>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} Yanie Muslimah. All rights reserved.</p>
+          <p>Urut & Confinement · Tradisi Bidan Melayu.</p>
+        </div>
+      </footer>
 
-            <div className="hero-bottom-note"><span /> <p>Urut & Confinement · tempahan mengikut slot</p></div>
-          </section>
-
-          <section className="editorial-about section-pad" id="tentang">
-            <motion.div className="about-center" {...reveal}>
-              <p className="eyebrow">Tentang Yanie Muslimah</p>
-              <h2>Tradisi yang terasa dekat.<br /><em>Dipersembahkan dengan lebih premium.</em></h2>
-              <p>Website ini dibina sebagai halaman jenama sebenar — bukan grid kad generik. Gambar, harga dan pakej menjadi fokus utama.</p>
-            </motion.div>
-
-            <motion.div className="editorial-collage" {...reveal}>
-              <figure className="collage-item c1"><Image src={gallery[1][0]} alt={gallery[1][1]} fill sizes="24vw" /></figure>
-              <figure className="collage-item c2"><Image src={gallery[0][0]} alt={gallery[0][1]} fill sizes="28vw" /></figure>
-              <figure className="collage-item c3"><Image src={gallery[2][0]} alt={gallery[2][1]} fill sizes="24vw" /></figure>
-              <figure className="collage-item c4"><Image src={gallery[3][0]} alt={gallery[3][1]} fill sizes="24vw" /></figure>
-              <div className="collage-brand-card">
-                <span>YANIE MUSLIMAH</span>
-                <strong>Urut & Confinement</strong>
-                <p>Tradisi bidan Melayu untuk wanita.</p>
-              </div>
-            </motion.div>
-          </section>
-
-          <section className="services-section section-pad" id="servis">
-            <motion.div className="section-heading centered" {...reveal}>
-              <p className="eyebrow">Servis pilihan</p>
-              <h2>Rawatan yang pelanggan boleh pilih terus.</h2>
-              <p>Harga sebenar dipaparkan supaya pelanggan tak perlu mesej semata-mata untuk bertanya bajet.</p>
-            </motion.div>
-
-            <div className="feature-service-grid">
-              {[
-                ["Urutan Buang Angin", "RM100", gallery[0][0], "Urutan tradisional"],
-                ["Urutan Terapi Saraf", "RM130", gallery[3][0], "Fokus urutan tradisional"],
-                ["Badan, Kepala & Muka", "RM150", gallery[1][0], "Sesi gabungan"],
-              ].map(([name, price, image, note], index) => (
-                <motion.article className={`feature-card ${index === 0 ? "feature-card-accent" : ""}`} key={name} {...reveal} transition={{ ...reveal.transition, delay: index * 0.07 }}>
-                  <figure><Image src={image} alt={name} fill sizes="(max-width: 760px) 100vw, 30vw" /></figure>
-                  <div className="feature-card-body">
-                    <span className="card-index">0{index + 1}</span>
-                    <h3>{name}</h3>
-                    <p>{note}</p>
-                    <strong>{price}</strong>
-                  </div>
-                </motion.article>
-              ))}
-            </div>
-          </section>
-
-          <section className="specialty-section section-pad">
-            <motion.div className="section-heading centered compact" {...reveal}>
-              <p className="eyebrow">Keistimewaan</p>
-              <h2>Lebih daripada satu jenis urutan.</h2>
-            </motion.div>
-
-            <div className="specialty-layout">
-              <div className="specialty-column">
-                {specialties.slice(0, 3).map(([title, text], index) => (
-                  <motion.div className="specialty-row" key={title} {...reveal}>
-                    <span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div>
-                  </motion.div>
-                ))}
-              </div>
-              <motion.figure className="specialty-photo" {...reveal}>
-                <Image src={gallery[2][0]} alt="Suasana rawatan Yanie Muslimah" fill sizes="(max-width: 760px) 100vw, 28vw" />
-                <span className="photo-label">YANIE<br />MUSLIMAH</span>
-              </motion.figure>
-              <div className="specialty-column">
-                {specialties.slice(3).map(([title, text], index) => (
-                  <motion.div className="specialty-row" key={title} {...reveal}>
-                    <span>0{index + 4}</span><div><h3>{title}</h3><p>{text}</p></div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="price-section section-pad" id="harga">
-            <motion.div className="section-heading split-heading" {...reveal}>
-              <div><p className="eyebrow">Harga rawatan</p><h2>Semua harga,<br />jelas dari awal.</h2></div>
-              <p className="heading-note">Nama servis dikekalkan mengikut poster Yanie. Penerangan di website tidak membuat tuntutan perubatan.</p>
-            </motion.div>
-            <motion.div className="price-table" {...reveal}>
-              {services.map((service, index) => (
-                <div className="price-row" key={service.name}>
-                  <span className="price-index">{String(index + 1).padStart(2, "0")}</span>
-                  <div><h3>{service.name}</h3><p>{service.note}</p></div>
-                  <strong>{service.price}</strong>
-                </div>
-              ))}
-            </motion.div>
-            <p className="wellness-note">* Perkhidmatan berkaitan kehamilan, kesuburan, rahim, saraf atau keadaan kesihatan ialah rawatan tradisional/wellness dan bukan pengganti diagnosis atau rawatan profesional kesihatan.</p>
-          </section>
-
-          <section className="packages-section section-pad" id="pakej">
-            <motion.div className="section-heading centered" {...reveal}>
-              <p className="eyebrow">Pakej utama</p>
-              <h2>Pilih pakej yang sesuai dengan keperluan.</h2>
-              <p>Pakej pantang mempunyai caj pengangkutan mengikut jarak.</p>
-            </motion.div>
-
-            <div className="package-grid">
-              {packages.map((pkg, index) => (
-                <motion.article className={`package-card ${pkg.featured ? "package-featured" : ""}`} key={pkg.label} {...reveal} transition={{ ...reveal.transition, delay: index * 0.08 }}>
-                  <div className="package-topline"><span>{pkg.label}</span>{pkg.featured && <b>POPULAR</b>}</div>
-                  <h3>{pkg.title}</h3>
-                  <ul>{pkg.items.map((item) => <li key={item}>{item}</li>)}</ul>
-                  <div className="package-prices">{pkg.prices.map((price) => <strong key={price}>{price}</strong>)}</div>
-                  <a href={whatsapp(pkg.message)} target="_blank" rel="noreferrer">Tanya pakej <span>↗</span></a>
-                </motion.article>
-              ))}
-            </div>
-          </section>
-
-          <section className="feedback-section section-pad" id="feedback">
-            <motion.div className="feedback-heading" {...reveal}>
-              <p className="eyebrow">Feedback pelanggan</p>
-              <h2>Bahagian ini akan guna screenshot sebenar — bukan review rekaan.</h2>
-            </motion.div>
-            <div className="feedback-grid">
-              {[1, 2].map((item) => (
-                <motion.article className={`feedback-card ${item === 2 ? "feedback-offset" : ""}`} key={item} {...reveal}>
-                  <div className="feedback-placeholder"><span>SCREENSHOT</span><strong>Feedback 0{item}</strong><small>WhatsApp / DM pelanggan sebenar</small><b>”</b></div>
-                  <div className="feedback-caption"><strong>Pelanggan sebenar</strong><p>Screenshot akan diletakkan di sini selepas aset feedback diberi.</p></div>
-                </motion.article>
-              ))}
-            </div>
-          </section>
-
-          <section className="booking-section section-pad" id="tempahan">
-            <motion.div className="booking-panel" {...reveal}>
-              <div><p className="eyebrow eyebrow-light">Tempahan</p><h2>Terus berbincang dengan Kak Yanie.</h2></div>
-              <div className="booking-side">
-                <p>Beritahu servis atau pakej yang diminati, tarikh pilihan dan lokasi jika melibatkan pakej pantang.</p>
-                <a href={whatsapp("Assalamualaikum Kak Yanie, saya nak tanya slot rawatan.")} target="_blank" rel="noreferrer">WhatsApp 011-60860986 <span>↗</span></a>
-                <div className="booking-meta"><span>Sitiawan · Manjung</span><span>Khas wanita</span><span>Temujanji dahulu</span></div>
-              </div>
-            </motion.div>
-          </section>
-        </main>
-
-        <footer className="site-footer">
-          <div className="footer-brand"><strong>YANIE</strong><span>MUSLIMAH</span><p>Urutan Tradisi Bidan Melayu · Urut & Confinement</p></div>
-          <div className="footer-col"><span>Explore</span><a href="#servis">Servis</a><a href="#harga">Harga</a><a href="#pakej">Pakej</a></div>
-          <div className="footer-col"><span>Hubungi</span><a href="tel:+601160860986">011-60860986</a><a href={wa} target="_blank" rel="noreferrer">WhatsApp</a><p>Sitiawan, Manjung</p></div>
-          <div className="footer-bottom"><small>© {new Date().getFullYear()} Yanie Muslimah</small><a href="#top">Kembali ke atas ↑</a></div>
-        </footer>
-      </div>
-
-      <a className="mobile-sticky-cta" href={whatsapp("Assalamualaikum Kak Yanie, saya nak tanya slot rawatan.")} target="_blank" rel="noreferrer">WhatsApp Kak Yanie <span>↗</span></a>
-    </div>
+      <a className="mobile-wa" href={whatsapp("Assalamualaikum Kak Yanie, saya nak tanya slot rawatan.")} target="_blank" rel="noreferrer">WhatsApp Kak Yanie</a>
+    </main>
   );
 }
