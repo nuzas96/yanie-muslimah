@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 * {
@@ -10,13 +10,13 @@
 
 html {
   scroll-behavior: smooth;
-  background: #F1E8D8;
+  background: #131411;
 }
 
 body {
   margin: 0;
-  background: #F1E8D8;
-  color: #201B18;
+  background: #131411;
+  color: #e5e2dd;
   font-family: var(--font-sans), Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -39,4 +39,15 @@ img {
 
 .serif {
   font-family: var(--font-display), Georgia, serif;
+}
+
+/* Keep V6 exactly as-is visually; only make existing borders white. */
+.border,
+.border-t,
+.border-b {
+  border-color: rgba(255, 255, 255, 0.30) !important;
+}
+
+.divide-y > :not(:last-child) {
+  border-color: rgba(255, 255, 255, 0.18) !important;
 }
