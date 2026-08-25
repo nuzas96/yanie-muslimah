@@ -40,3 +40,14 @@ img {
 .serif {
   font-family: var(--font-display), Georgia, serif;
 }
+
+/* Keep the original dark V6 palette. Only borders are changed to white. */
+.border,
+.border-t,
+.border-b {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.divide-y > :not(:last-child) {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
