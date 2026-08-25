@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Manrope } from "next/font/google";
+import { Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-const bodoni = Bodoni_Moda({
+const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ms" className={`${bodoni.variable} ${manrope.variable}`}>
+    <html lang="ms" className={`${playfair.variable} ${manrope.variable}`}>
       <body>{children}</body>
     </html>
   );
